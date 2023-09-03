@@ -1,11 +1,16 @@
 import { GRID_SIZE } from "../constant";
+import { resolveSudoku } from "./resolveSudoku";
 
-export function generateSudoku() {
+export function generateSudoku(): void {
   const sudoku = generateEmptyGrid();
 
   if (import.meta.env.VITE_DEBUG_MODE === "true") {
     console.table(sudoku);
   }
+
+  resolveSudoku(sudoku);
+
+  console.table(sudoku);
 }
 
 export function generateEmptyGrid() {
