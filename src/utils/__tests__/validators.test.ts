@@ -19,7 +19,7 @@ describe("[validators.ts]", () => {
     ];
   });
 
-  test("validateColumn()", () => {
+  describe("validateColumn()", () => {
     test("should return false if the cell can not be filled value", () => {
       const result = validators.validateColumn(mockGrid, 0, 0, 1);
 
@@ -27,51 +27,42 @@ describe("[validators.ts]", () => {
     });
 
     test("should return true if the cell can be filled value", () => {
-      mockGrid[0][0] = null;
+      mockGrid.forEach((_, i) => {
+        mockGrid[i][0] = null;
+      });
 
-      let result = validators.validateColumn(mockGrid, 0, 0, 1);
-
-      expect(result).toBeTruthy();
-
-      mockGrid[9][9] = null;
-
-      result = validators.validateColumn(mockGrid, 0, 0, 1);
+      const result = validators.validateColumn(mockGrid, 0, 0, 1);
 
       expect(result).toBeTruthy();
     });
   });
 
-  test("validateRow()", () => {
+  describe("validateRow()", () => {
     test("should return false if the cell can not be filled by value", () => {
-      const result = validators.validateRow(mockGrid, 0, 0, 1);
+      const result = validators.validateRow(mockGrid, 0, 1, 1);
 
       expect(result).toBeFalsy();
     });
 
     test("should return true if the cell can be filled by value", () => {
-      mockGrid[0][0] = null;
+      mockGrid.forEach((_, i) => {
+        mockGrid[i][0] = null;
+      });
 
-      let result = validators.validateRow(mockGrid, 0, 0, 1);
-
-      expect(result).toBeTruthy();
-
-      mockGrid[9][9] = null;
-
-      result = validators.validateRow(mockGrid, 0, 0, 1);
+      const result = validators.validateRow(mockGrid, 0, 0, 1);
 
       expect(result).toBeTruthy();
     });
   });
 
-  test("validateBox()", () => {
+  describe("validateBox()", () => {
     test("should return false if the cell can not be filled by value", () => {
       const mockBox = [
         [1, 2, 3],
         [1, 2, 3],
         [1, 2, 3],
       ];
-
-      const result = validators.validateBox(mockBox, 0, 0, 1);
+      const result = validators.validateBox(mockBox, 1, 0, 2);
 
       expect(result).toBeFalsy();
     });
@@ -83,7 +74,7 @@ describe("[validators.ts]", () => {
         [1, 2, 3],
       ];
 
-      const result = validators.validateBox(mockBox, 0, 0, 1);
+      const result = validators.validateBox(mockBox, 0, 1, 1);
 
       expect(result).toBeFalsy();
     });

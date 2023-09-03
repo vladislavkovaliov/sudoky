@@ -40,8 +40,8 @@ export function validateBox(
   const firstRowInBox = row - (row % BOX_SIZE);
   const firstColumnInBox = column - (column % BOX_SIZE);
 
-  for (let i = firstRowInBox; i < firstRowInBox; i++) {
-    for (let j = firstColumnInBox; j < firstColumnInBox; j++) {
+  for (let i = firstRowInBox; i < firstRowInBox + BOX_SIZE; i++) {
+    for (let j = firstColumnInBox; j < firstColumnInBox + BOX_SIZE; j++) {
       if (grid[i][j] === value && i !== row && j !== column) {
         return false;
       }

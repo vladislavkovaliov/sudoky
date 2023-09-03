@@ -8,11 +8,11 @@ export function removeCells(grid: IGrid, difficulty: number = 30): IGrid {
 
   let i = 0;
 
-  // We remove DIFFUCULTY count of cells and return a new grid.
+  // We remove DIFFICULTY count of cells and return a new grid.
   while (i < difficulty) {
     const row = Math.floor(Math.random() * GRID_SIZE);
     const column = Math.floor(Math.random() * GRID_SIZE);
-    console.log(grid, row, column);
+    //console.log(grid, row, column);
     if (resultGrid[row][column] !== null) {
       resultGrid[row][column] = null;
 
@@ -21,7 +21,7 @@ export function removeCells(grid: IGrid, difficulty: number = 30): IGrid {
   }
 
   if (import.meta.env.VITE_DEBUG_MODE === "true") {
-    console.table(resultGrid);
+    //console.table(resultGrid);
   }
 
   return resultGrid;
