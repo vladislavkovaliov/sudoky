@@ -12,6 +12,8 @@
   --border-radius: 0.5vmin;
   --cell-bg: #f2f2f2;
   --filled-bg: #d9d9d9;
+  --selected-bg: #ffdbb3;
+  --highlight-bg: #fff3e5;
 }
 
 .cell,
@@ -75,8 +77,16 @@ body {
   background: var(--cell-bg);
 }
 
-.filled {
+.cell.filled {
   background: var(--filled-bg);
+}
+
+.cell.highlight {
+  background: var(--highlight-bg);
+}
+
+.cell.selected {
+  background: var(--selected-bg);
 }
 
 .cell:nth-child(3),
