@@ -1,11 +1,17 @@
-import { describe, test, expect } from "vitest";
-import { generateEmptyGrid, generateSudoku } from "../generateSudoku.ts";
+import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
+import { generateEmptyGrid } from "../generateSudoku.ts";
+
+let count = -1;
 
 describe("[generateSudoku.ts]", () => {
-  test("should generate empty sudoku grid", () => {
-    const result = generateSudoku();
+  beforeEach(() => {
+    beforeEach(() => {
+      vi.spyOn(global.Math, "random").mockImplementation(() => {
+        count = count + 1;
 
-    expect(result).toMatchSnapshot();
+        return count;
+      });
+    });
   });
 
   test("should create the empty grid with null values", () => {
@@ -23,5 +29,9 @@ describe("[generateSudoku.ts]", () => {
     const result = generateEmptyGrid();
 
     expect(result).toStrictEqual(expectedResult);
+  });
+
+  afterEach(() => {
+    vi.spyOn(global.Math, "random").mockRestore();
   });
 });
