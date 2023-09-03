@@ -7,10 +7,15 @@ import {
   SELECTED_CLASSNAME,
   HIGHLIGHT_CLASSNAME,
   EMPTY_STRING,
+  ERROR_CLASSNAME,
+  ZOOM_CLASSNAME,
 } from "./constant";
-import { IState } from "./types";
+import { IDuplicateValue, IState } from "./types";
 
 import "./style.css";
+import { convertIndexToPosition } from "./utils/convertIndexToPosition";
+
+// TODO: don't show error if user clicks on already filled cell
 
 if (import.meta.env.VITE_DEBUG_MODE === "true") {
   //console.log(import.meta.env);
@@ -24,6 +29,7 @@ const state: IState = {
   selectedCellIndex: -1,
   selectedCell: null,
   cells: [],
+  sudoku: null,
 };
 
 export function main() {
@@ -31,14 +37,17 @@ export function main() {
   const cells = getCellsFromDOM();
 
   state.cells = cells;
+  state.sudoku = sudoku;
 
   fillCells(sudoku, state.cells);
+
   initCellsEvents(state.cells);
+  initNumbersEvents();
 }
 
 export function removeClassname(cells: NodeListOf<Element> | never[]) {
   cells.forEach((x) =>
-    x.classList.remove(SELECTED_CLASSNAME, HIGHLIGHT_CLASSNAME)
+    x.classList.remove(SELECTED_CLASSNAME, HIGHLIGHT_CLASSNAME, ERROR_CLASSNAME)
   );
 }
 
@@ -72,6 +81,62 @@ export function handleCellClick(cell: Element, idx: number) {
   });
 }
 
+export function handleNumberClick(value: number) {
+  if (!state.selectedCell) {
+    return;
+  }
+
+  if (
+    state.selectedCell &&
+    state.selectedCell.classList.contains(FILLED_CLASSNAME)
+  ) {
+    return;
+  }
+
+  state.cells.forEach((cell) =>
+    cell.classList.remove(ERROR_CLASSNAME, ZOOM_CLASSNAME)
+  );
+  state.selectedCell.classList.add(SELECTED_CLASSNAME);
+
+  setValueInSelectedCell(value, state.selectedCellIndex);
+
+  console.log(value);
+}
+
+export function setValueInSelectedCell(value: number, selectedIndex: number) {
+  const { row, column } = convertIndexToPosition(selectedIndex);
+
+  const dupsPositions = state.sudoku?.getDuplicatePositions(row, column, value);
+
+  if (dupsPositions?.length) {
+    highlightDuplicates(dupsPositions);
+  } else {
+    if (state.sudoku) {
+      state.sudoku._grid[row][column] = value;
+    }
+
+    if (state.selectedCell) {
+      state.selectedCell.textContent = value.toString();
+    }
+
+    if (state.sudoku && state.selectedCell) {
+      setTimeout(() => {
+        state.selectedCell?.classList.add(ZOOM_CLASSNAME);
+      }, 0);
+    }
+  }
+}
+
+export function highlightDuplicates(dups: IDuplicateValue[]) {
+  dups.forEach(({ row, column }) => {
+    const index = convertPositionToIndex(row, column);
+
+    setTimeout(() => {
+      state.cells[index].classList.add(ERROR_CLASSNAME);
+    }, 0);
+  });
+}
+
 export function getColumnByIndex(index: number) {
   const column = index % GRID_SIZE;
 
@@ -94,6 +159,14 @@ export function initCellsEvents(cells: NodeListOf<Element> | never[]) {
       removeClassname(cells);
       handleCellClick(cell, index);
     })
+  );
+}
+
+export function initNumbersEvents() {
+  const numbers = document.querySelectorAll(".number")!;
+
+  numbers.forEach((x) =>
+    x.addEventListener("click", () => handleNumberClick(Number(x.textContent)))
   );
 }
 

@@ -14,6 +14,7 @@
   --filled-bg: #d9d9d9;
   --selected-bg: #ffdbb3;
   --highlight-bg: #fff3e5;
+  --error-bg: #ff8c8c;
 }
 
 .cell,
@@ -89,6 +90,10 @@ body {
   background: var(--selected-bg);
 }
 
+.cell.error {
+  background: var(--error-bg);
+}
+
 .cell:nth-child(3),
 .cell:nth-child(6) {
   margin-right: var(--gap);
@@ -104,4 +109,14 @@ body {
   grid-template-columns: repeat(9, auto);
   grid-template-rows: repeat(9, auto);
   gap: var(--gap);
+}
+
+.zoom {
+  animation: zoom 0.7s ease-in;
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1.2);
+  }
 }
