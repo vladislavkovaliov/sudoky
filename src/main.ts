@@ -7,8 +7,3 @@ if (import.meta.env.VITE_DEBUG_MODE === "true") {
 if (import.meta.env.VITE_DEBUG_MODE === "true") {
   //console.table(sudoky._grid);
 }
-
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <div>
-     </div>
-`;
