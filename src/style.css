@@ -5,12 +5,13 @@
 }
 
 :root {
-  --bg: #ffffff;
+  --bg: #7c7c7c7;
   --gap: 0.5vmin;
   --cell-height: 8vmin;
   --cell-width: 8vmin;
   --border-radius: 0.5vmin;
-  --cell-bg: #cccccc;
+  --cell-bg: #f2f2f2;
+  --filled-bg: #d9d9d9;
 }
 
 .cell,
@@ -72,6 +73,10 @@ body {
   width: var(--cell-width);
   border-radius: var(--border-radius);
   background: var(--cell-bg);
+}
+
+.filled {
+  background: var(--filled-bg);
 }
 
 .cell:nth-child(3),
