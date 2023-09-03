@@ -4,6 +4,15 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #ffffff;
+  --gap: 0.5vmin;
+  --cell-height: 8vmin;
+  --cell-width: 8vmin;
+  --border-radius: 0.5vmin;
+  --cell-bg: #cccccc;
+}
+
 .cell,
 .number,
 .header > div {
@@ -29,43 +38,55 @@ body {
 .content {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .footer {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .numbers {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  gap: var(--gap);
 }
 
 .number {
-  border: 1px solid red;
-  padding: 2vmin;
-  border-radius: 1vmin;
-}
-
-.box {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  width: 21vmin;
-  height: 21vmin;
-  gap: 0.5vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--cell-bg);
+  width: var(--cell-width);
+  height: var(--cell-height);
+  border-radius: var(--border-radius);
 }
 
 .cell {
-  width: 7vmin;
-  height: 7vmin;
-  border: 1px solid red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--cell-height);
+  width: var(--cell-width);
+  border-radius: var(--border-radius);
+  background: var(--cell-bg);
+}
+
+.cell:nth-child(3),
+.cell:nth-child(6) {
+  margin-right: var(--gap);
+}
+
+.cell:nth-child(19),
+.cell:nth-child(46) {
+  margin-bottom: var(--gap);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 22vmin);
-  grid-template-rows: repeat(3, 22vmin);
-  column-gap: 1vmin;
-  row-gap: 1vmin;
+  grid-template-columns: repeat(9, auto);
+  grid-template-rows: repeat(9, auto);
+  gap: var(--gap);
 }
