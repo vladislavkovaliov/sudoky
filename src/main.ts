@@ -14,6 +14,7 @@ import { IDuplicateValue, IState } from "./types";
 
 import "./style.css";
 import { convertIndexToPosition } from "./utils/convertIndexToPosition";
+import { getEmptyArray } from "./utils/getEmptyArray";
 
 // TODO: don't show error if user clicks on already filled cell
 
@@ -110,20 +111,21 @@ export function setValueInSelectedCell(value: number, selectedIndex: number) {
 
   if (dupsPositions?.length) {
     highlightDuplicates(dupsPositions);
-  } else {
-    if (state.sudoku) {
-      state.sudoku._grid[row][column] = value;
-    }
+    return;
+  }
 
-    if (state.selectedCell) {
-      state.selectedCell.textContent = value.toString();
-    }
+  if (state.sudoku) {
+    state.sudoku._grid[row][column] = value;
+  }
 
-    if (state.sudoku && state.selectedCell) {
-      setTimeout(() => {
-        state.selectedCell?.classList.add(ZOOM_CLASSNAME);
-      }, 0);
-    }
+  if (state.selectedCell) {
+    state.selectedCell.textContent = value.toString();
+  }
+
+  if (state.sudoku && state.selectedCell) {
+    setTimeout(() => {
+      state.selectedCell?.classList.add(ZOOM_CLASSNAME);
+    }, 0);
   }
 }
 
@@ -132,7 +134,7 @@ export function highlightDuplicates(dups: IDuplicateValue[]) {
     const index = convertPositionToIndex(row, column);
 
     setTimeout(() => {
-      state.cells[index].classList.add(ERROR_CLASSNAME);
+      state.cells[index].classList.add(ERROR_CLASSNAME, ZOOM_CLASSNAME);
     }, 0);
   });
 }
@@ -140,17 +142,15 @@ export function highlightDuplicates(dups: IDuplicateValue[]) {
 export function getColumnByIndex(index: number) {
   const column = index % GRID_SIZE;
 
-  return new Array(GRID_SIZE)
-    .fill(0)
-    .map((_, i) => convertPositionToIndex(i, column));
+  return getEmptyArray(GRID_SIZE).map((_, i) =>
+    convertPositionToIndex(i, column)
+  );
 }
 
 export function getRowByIndex(index: number) {
   const row = Math.floor(index / GRID_SIZE);
 
-  return new Array(GRID_SIZE)
-    .fill(0)
-    .map((_, i) => convertPositionToIndex(row, i));
+  return getEmptyArray(GRID_SIZE).map((_, i) => convertPositionToIndex(row, i));
 }
 
 export function initCellsEvents(cells: NodeListOf<Element> | never[]) {
