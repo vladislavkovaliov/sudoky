@@ -3,7 +3,7 @@ import { IGrid } from "../types";
 
 export const DEFAULT_DIFFICULTY = 30;
 
-export function removeCells(grid: IGrid, difficulty: number = 30): IGrid {
+export function removeCells(grid: IGrid, difficulty: number = 1): IGrid {
   const resultGrid = [...grid].map((x) => [...x]);
 
   let i = 0;

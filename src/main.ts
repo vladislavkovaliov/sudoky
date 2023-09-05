@@ -82,6 +82,64 @@ export function handleCellClick(cell: Element, idx: number) {
   });
 }
 
+export function handleWinnerAnimation() {
+  state.cells.forEach((cell) =>
+    cell.classList.remove(
+      ERROR_CLASSNAME,
+      ZOOM_CLASSNAME,
+      HIGHLIGHT_CLASSNAME,
+      FILLED_CLASSNAME,
+      SELECTED_CLASSNAME
+    )
+  );
+
+  function backtrace(
+    cells: NodeListOf<Element> | [],
+    row: number,
+    column: number,
+    delay: number,
+    globalRow: number,
+    globalColumn: number
+  ) {
+    console.log(globalRow, row);
+    if (row > GRID_SIZE || column > GRID_SIZE) {
+      return;
+    }
+
+    if (row < 0 || column < 0) {
+      return;
+    }
+
+    const index = convertPositionToIndex(row, column);
+
+    if (index >= GRID_SIZE * GRID_SIZE) {
+      return;
+    }
+
+    setTimeout(() => {
+      cells[index].classList.add(HIGHLIGHT_CLASSNAME, ZOOM_CLASSNAME);
+    }, delay * 150);
+
+    if (row > globalRow - 1) {
+      backtrace(cells, row + 1, column, delay + 1, globalRow, globalColumn);
+    }
+
+    if (row < globalRow + 1) {
+      backtrace(cells, row - 1, column, delay + 1, globalRow, globalColumn);
+    }
+
+    if (column > globalColumn - 1) {
+      backtrace(cells, row, column + 1, delay + 1, globalRow, globalColumn);
+    }
+
+    if (column < globalColumn + 1) {
+      backtrace(cells, row, column - 1, delay + 1, globalRow, globalColumn);
+    }
+  }
+  // TODO: store last index of last filled cell
+  backtrace(state.cells, 4, 4, 1, 4, 4);
+}
+
 export function handleNumberClick(value: number) {
   if (!state.selectedCell) {
     return;
@@ -101,7 +159,12 @@ export function handleNumberClick(value: number) {
 
   setValueInSelectedCell(value, state.selectedCellIndex);
 
-  console.log(value);
+  // procceed win case
+  if (state.sudoku?.hasEmptyCells() === false) {
+    setTimeout(() => {
+      handleWinnerAnimation();
+    }, 500);
+  }
 }
 
 export function setValueInSelectedCell(value: number, selectedIndex: number) {

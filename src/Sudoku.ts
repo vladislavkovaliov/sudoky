@@ -2,7 +2,7 @@ import { BOX_SIZE, GRID_SIZE } from "./constant";
 import { IDuplicateValue, IGrid } from "./types";
 import { findEmptyCell } from "./utils/findEmptyCell";
 import { generateSudoku } from "./utils/generateSudoku";
-console.log(generateSudoku);
+
 export class Sudoku {
   public _grid: IGrid;
 
