@@ -3,7 +3,14 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    //    "plugin:preact/recommended",
+  ],
   overrides: [
     {
       env: {
@@ -20,6 +27,9 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint"],
-  rules: {},
+  plugins: ["@typescript-eslint", "preact"],
+  rules: {
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+  },
 };
