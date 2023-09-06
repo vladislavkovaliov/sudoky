@@ -1,6 +1,8 @@
 export const GRID_SIZE = 9;
 export const BOX_SIZE = 3;
 
+export const DEFAULT_DIFFICULTY = 30;
+
 // Strings
 export const EMPTY_STRING = "";
 

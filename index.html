@@ -8,24 +8,7 @@
   </head>
   <body>
     <div id="app">
-      <div class="header">
-        <div>
-          <p>Difficulty</p>
-          <p>Easy</p>
-        </div>
-        <div>
-          <p>Mistakes</p>
-          <p>0/3</p>
-        </div>
-        <div>
-          <p>Score</p>
-          <p>12345</p>
-        </div>
-        <div>
-          <p>Time</p>
-          <p>11:00</p>
-        </div>
-      </div>
+      <div class="header" id="preact-header"></div>
 
       <div class="content">
         <div class="grid">
@@ -120,6 +103,7 @@
           <div class="cell"></div>
         </div>
       </div>
+
       <div class="footer">
         <div class="numbers">
           <div class="number">1</div>
@@ -134,6 +118,8 @@
         </div>
       </div>
     </div>
+
     <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/preact.tsx"></script>
   </body>
 </html>

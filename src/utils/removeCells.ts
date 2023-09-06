@@ -1,9 +1,10 @@
-import { GRID_SIZE } from "../constant";
+import { GRID_SIZE, DEFAULT_DIFFICULTY } from "../constant";
 import { IGrid } from "../types";
 
-export const DEFAULT_DIFFICULTY = 30;
-
-export function removeCells(grid: IGrid, difficulty: number = 1): IGrid {
+export function removeCells(
+  grid: IGrid,
+  difficulty: number = DEFAULT_DIFFICULTY
+): IGrid {
   const resultGrid = [...grid].map((x) => [...x]);
 
   let i = 0;

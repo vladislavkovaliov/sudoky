@@ -1,7 +1,14 @@
+@font-face {
+  font-family: Sudoku;
+  src: url("./fonts/Sudoku.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Sudoku;
+  font-size: calc(var(--cell-height) / 2);
 }
 
 :root {
@@ -17,10 +24,21 @@
   --error-bg: #ff8c8c;
 }
 
+@media (max-width: 600px) {
+  :root {
+    --cell-height: 10vmin;
+    --cell-width: 10vmin;
+  }
+}
+
 .cell,
 .number,
 .header > div {
   cursor: pointer;
+}
+
+.header {
+  width: 100%;
 }
 
 body {
@@ -53,8 +71,8 @@ body {
 }
 
 .numbers {
-  display: grid;
-  grid-template-columns: repeat(5, auto);
+  display: flex;
+  grid-template-columns: repeat(auto, auto);
   gap: var(--gap);
 }
 

@@ -16,6 +16,8 @@ import "./style.css";
 import { convertIndexToPosition } from "./utils/convertIndexToPosition";
 import { getEmptyArray } from "./utils/getEmptyArray";
 
+import { EventEmitter } from "./core/EventEmitter";
+
 // TODO: don't show error if user clicks on already filled cell
 
 if (import.meta.env.VITE_DEBUG_MODE === "true") {
@@ -36,6 +38,9 @@ const state: IState = {
 export function main() {
   const sudoku = new Sudoku();
   const cells = getCellsFromDOM();
+  const eventEmitter = new EventEmitter();
+
+  window.eventEmitter = eventEmitter;
 
   state.cells = cells;
   state.sudoku = sudoku;
@@ -99,9 +104,9 @@ export function handleWinnerAnimation() {
     column: number,
     delay: number,
     globalRow: number,
-    globalColumn: number
+    globalColumn: number,
+    classNames: string[]
   ) {
-    console.log(globalRow, row);
     if (row > GRID_SIZE || column > GRID_SIZE) {
       return;
     }
@@ -117,27 +122,65 @@ export function handleWinnerAnimation() {
     }
 
     setTimeout(() => {
-      cells[index].classList.add(HIGHLIGHT_CLASSNAME, ZOOM_CLASSNAME);
+      cells[index].classList.remove(HIGHLIGHT_CLASSNAME, ERROR_CLASSNAME);
+
+      cells[index].classList.add(...classNames);
     }, delay * 150);
 
     if (row > globalRow - 1) {
-      backtrace(cells, row + 1, column, delay + 1, globalRow, globalColumn);
+      backtrace(
+        cells,
+        row + 1,
+        column,
+        delay + 1,
+        globalRow,
+        globalColumn,
+        classNames
+      );
     }
 
     if (row < globalRow + 1) {
-      backtrace(cells, row - 1, column, delay + 1, globalRow, globalColumn);
+      backtrace(
+        cells,
+        row - 1,
+        column,
+        delay + 1,
+        globalRow,
+        globalColumn,
+        classNames
+      );
     }
 
     if (column > globalColumn - 1) {
-      backtrace(cells, row, column + 1, delay + 1, globalRow, globalColumn);
+      backtrace(
+        cells,
+        row,
+        column + 1,
+        delay + 1,
+        globalRow,
+        globalColumn,
+        classNames
+      );
     }
 
     if (column < globalColumn + 1) {
-      backtrace(cells, row, column - 1, delay + 1, globalRow, globalColumn);
+      backtrace(
+        cells,
+        row,
+        column - 1,
+        delay + 1,
+        globalRow,
+        globalColumn,
+        classNames
+      );
     }
   }
   // TODO: store last index of last filled cell
-  backtrace(state.cells, 4, 4, 1, 4, 4);
+  backtrace(state.cells, 4, 4, 1, 4, 4, [HIGHLIGHT_CLASSNAME, ZOOM_CLASSNAME]);
+
+  setTimeout(() => {
+    backtrace(state.cells, 4, 4, 1, 4, 4, [ZOOM_CLASSNAME]);
+  }, 150 * 3);
 }
 
 export function handleNumberClick(value: number) {
@@ -179,6 +222,10 @@ export function setValueInSelectedCell(value: number, selectedIndex: number) {
 
   if (state.sudoku) {
     state.sudoku._grid[row][column] = value;
+    // Need to update local storage
+    const VALUE_WEIGHT = 45;
+
+    window.eventEmitter.emit("score", value * VALUE_WEIGHT);
   }
 
   if (state.selectedCell) {
@@ -239,6 +286,4 @@ export function getCellsFromDOM(): NodeListOf<Element> {
   return cells;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  main();
-});
+main();
