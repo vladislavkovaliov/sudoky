@@ -16,7 +16,7 @@ vi.mock("../generateSudoku", () => ({
   generateSudoku: () => mockGrid,
 }));
 
-describe.only("[Sudoku.ts]", () => {
+describe("[Sudoku.ts]", () => {
   describe("hasEmptyCells()", () => {
     test("should return true if the grid has empty at least one empty cell", () => {
       const sudoky = new Sudoku();
