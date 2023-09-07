@@ -15,6 +15,7 @@ import { IDuplicateValue, IState } from "./types";
 import "./style.css";
 import { convertIndexToPosition } from "./utils/convertIndexToPosition";
 import { getEmptyArray } from "./utils/getEmptyArray";
+import { getDifficultyFromUrlAndFlush } from "./utils/getDifficultyFromUrlAndFlush";
 
 import { EventEmitter } from "./core/EventEmitter";
 
@@ -36,7 +37,8 @@ const state: IState = {
 };
 
 export function main() {
-  const sudoku = new Sudoku();
+  const diff = getDifficultyFromUrlAndFlush("diff");
+  const sudoku = new Sudoku(diff);
   const cells = getCellsFromDOM();
   const eventEmitter = new EventEmitter();
 

@@ -6,8 +6,8 @@ import { generateSudoku } from "./utils/generateSudoku";
 export class Sudoku {
   public _grid: IGrid;
 
-  public constructor() {
-    this._grid = generateSudoku();
+  public constructor(difficulty: number) {
+    this._grid = generateSudoku(difficulty);
   }
 
   public getDuplicatePositions = (

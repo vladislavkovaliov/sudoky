@@ -19,7 +19,7 @@ vi.mock("../generateSudoku", () => ({
 describe("[Sudoku.ts]", () => {
   describe("hasEmptyCells()", () => {
     test("should return true if the grid has empty at least one empty cell", () => {
-      const sudoky = new Sudoku();
+      const sudoky = new Sudoku(30);
       const result = sudoky.hasEmptyCells();
       // console.log(sudoky._grid);
       // console.log(sudoky.getDuplicatePositionsInBox(1, 1, 1));
