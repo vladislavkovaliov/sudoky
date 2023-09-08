@@ -9,4 +9,5 @@ export interface IState {
   selectedCellIndex: -1 | number;
   cells: NodeListOf<Element> | [];
   sudoku: Sudoku | null;
+  isDifficultSelected: boolean;
 }

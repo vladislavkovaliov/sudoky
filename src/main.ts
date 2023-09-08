@@ -9,6 +9,7 @@ import {
   EMPTY_STRING,
   ERROR_CLASSNAME,
   ZOOM_CLASSNAME,
+  DEFAULT_DIFFICULTY,
 } from "./constant";
 import { IDuplicateValue, IState } from "./types";
 
@@ -34,15 +35,24 @@ const state: IState = {
   selectedCell: null,
   cells: [],
   sudoku: null,
+  isDifficultSelected: false,
 };
 
-export function main() {
-  const diff = getDifficultyFromUrlAndFlush("diff");
-  const sudoku = new Sudoku(diff);
-  const cells = getCellsFromDOM();
+export function preMain() {
   const eventEmitter = new EventEmitter();
 
   window.eventEmitter = eventEmitter;
+
+  initDifficultSelection();
+}
+
+export function main(difficult: number = DEFAULT_DIFFICULTY) {
+  const hasParam =
+    new URL(window.location.href).searchParams.get("diff") ?? null;
+  const diff = hasParam ? getDifficultyFromUrlAndFlush("diff") : difficult;
+
+  const sudoku = new Sudoku(diff);
+  const cells = getCellsFromDOM();
 
   state.cells = cells;
   state.sudoku = sudoku;
@@ -51,6 +61,15 @@ export function main() {
 
   initCellsEvents(state.cells);
   initNumbersEvents();
+
+  const header = document.querySelector(".header")!;
+  const content = document.querySelector(".content")!;
+  const footer = document.querySelector(".footer")!;
+
+  [header, content, footer].forEach((x) => x.classList.remove("hide"));
+
+  const popup = document.querySelector(".popup")!;
+  popup.classList.add("hide");
 }
 
 export function removeClassname(cells: NodeListOf<Element> | never[]) {
@@ -288,4 +307,23 @@ export function getCellsFromDOM(): NodeListOf<Element> {
   return cells;
 }
 
-main();
+export function initDifficultSelection() {
+  const difficultElements = document.querySelectorAll(".popup-item") ?? [];
+
+  difficultElements.forEach((element) => {
+    element.addEventListener(
+      "click",
+      (event: Event) => {
+        const target = event.target as HTMLElement;
+        const difficult = Number(target.dataset["value"]);
+
+        window.eventEmitter.emit("difficult", difficult);
+
+        main(difficult);
+      },
+      false
+    );
+  });
+}
+
+preMain();

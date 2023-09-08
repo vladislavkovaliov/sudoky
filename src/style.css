@@ -138,3 +138,32 @@ body {
     transform: scale(1.1);
   }
 }
+
+.hide {
+  display: none !important;
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: grey;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  border-radius: 18px;
+  padding: 24px;
+  background-color: white;
+}
+
+.popup-item {
+  padding: 12px;
+  cursor: pointer;
+}
