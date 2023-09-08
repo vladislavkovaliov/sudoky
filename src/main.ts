@@ -20,14 +20,51 @@ import { getDifficultyFromUrlAndFlush } from "./utils/getDifficultyFromUrlAndFlu
 
 import { EventEmitter } from "./core/EventEmitter";
 
-// TODO: don't show error if user clicks on already filled cell
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  Firestore,
+} from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-if (import.meta.env.VITE_DEBUG_MODE === "true") {
-  //console.log(import.meta.env);
-}
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyC4USY35f2sy8ea54uMFavGhQVrYjMKOL0",
+  authDomain: "sudoky-47d5d.firebaseapp.com",
+  projectId: "sudoky-47d5d",
+  storageBucket: "sudoky-47d5d.appspot.com",
+  messagingSenderId: "1034159942531",
+  appId: "1:1034159942531:web:3d837d2dbabf6d7b3924b6",
+  measurementId: "G-8VQQT16LHX",
+};
 
-if (import.meta.env.VITE_DEBUG_MODE === "true") {
-  //console.table(sudoky._grid);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const firestore = getFirestore();
+
+export async function sendEvent(
+  firestore: Firestore,
+  eventName: string,
+  payload: Record<string, any>
+) {
+  const col = collection(firestore, "events");
+
+  const data = {
+    eventName: eventName,
+    ...payload,
+  };
+
+  try {
+    await addDoc(col, data);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 const state: IState = {
@@ -44,6 +81,11 @@ export function preMain() {
   window.eventEmitter = eventEmitter;
 
   initDifficultSelection();
+
+  const reffer = document.referrer;
+
+  logEvent(analytics, "reffer", { reffer: reffer });
+  sendEvent(firestore, "reffer", { reffer: reffer });
 }
 
 export function main(difficult: number = DEFAULT_DIFFICULTY) {
@@ -226,6 +268,7 @@ export function handleNumberClick(value: number) {
   // procceed win case
   if (state.sudoku?.hasEmptyCells() === false) {
     setTimeout(() => {
+      logEvent(analytics, "event_win", {});
       handleWinnerAnimation();
     }, 500);
   }
