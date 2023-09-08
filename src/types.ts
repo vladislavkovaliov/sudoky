@@ -10,4 +10,6 @@ export interface IState {
   cells: NodeListOf<Element> | [];
   sudoku: Sudoku | null;
   isDifficultSelected: boolean;
+  score: number;
+  difficult: number;
 }

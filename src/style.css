@@ -1,13 +1,24 @@
+
 @font-face {
-  font-family: Sudoku;
-  src: url("./fonts/Sudoku.ttf");
+  font-family: 'Sudoku Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Sudoku Regular'), url('./fonts/Sudoku.woff') format('woff');
+  }
+  
+
+  @font-face {
+  font-family: 'Sudoku Italic';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Sudoku Italic'), url('./fonts/Sudoku-Italic.woff') format('woff');
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Sudoku;
+  font-family: 'Sudoku Regular';
   font-size: calc(var(--cell-height) / 2);
 }
 

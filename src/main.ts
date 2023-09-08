@@ -50,10 +50,11 @@ const firestore = getFirestore();
 
 export async function sendEvent(
   firestore: Firestore,
+  collectionName: string,
   eventName: string,
   payload: Record<string, any>
 ) {
-  const col = collection(firestore, "events");
+  const col = collection(firestore, collectionName);
 
   const data = {
     eventName: eventName,
@@ -73,6 +74,8 @@ const state: IState = {
   cells: [],
   sudoku: null,
   isDifficultSelected: false,
+  score: 0,
+  difficult: 0,
 };
 
 export function preMain() {
@@ -80,12 +83,13 @@ export function preMain() {
 
   window.eventEmitter = eventEmitter;
 
+  register();
   initDifficultSelection();
 
   const reffer = document.referrer;
 
   logEvent(analytics, "reffer", { reffer: reffer });
-  sendEvent(firestore, "reffer", { reffer: reffer });
+  sendEvent(firestore, "events", "reffer", { reffer: reffer });
 }
 
 export function main(difficult: number = DEFAULT_DIFFICULTY) {
@@ -112,6 +116,8 @@ export function main(difficult: number = DEFAULT_DIFFICULTY) {
 
   const popup = document.querySelector(".popup")!;
   popup.classList.add("hide");
+
+  sendEvent(firestore, "start", "start_game", { difficult: state.difficult });
 }
 
 export function removeClassname(cells: NodeListOf<Element> | never[]) {
@@ -269,6 +275,9 @@ export function handleNumberClick(value: number) {
   if (state.sudoku?.hasEmptyCells() === false) {
     setTimeout(() => {
       logEvent(analytics, "event_win", {});
+
+      sendEvent(firestore, "end", "end_game", { score: state.score });
+
       handleWinnerAnimation();
     }, 500);
   }
@@ -348,6 +357,16 @@ export function getCellsFromDOM(): NodeListOf<Element> {
   const cells = document.querySelectorAll(".cell")!;
 
   return cells;
+}
+
+export function register() {
+  window.eventEmitter.on("difficult", (difficult: number) => {
+    state.difficult = difficult;
+  });
+
+  window.eventEmitter.on("score", (score: number) => {
+    state.score = score;
+  });
 }
 
 export function initDifficultSelection() {
