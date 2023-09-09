@@ -25,7 +25,9 @@ export function Timer() {
     <div className={styles.container}>
       <p className={styles.title}>Time</p>
       <span className={styles.separator}>:</span>
-      <p className={styles.time}>{convertSecondsToHumanTime(seconds)}</p>
+      <p id="timer-value" className={styles.time}>
+        {convertSecondsToHumanTime(seconds)}
+      </p>
     </div>
   );
 }

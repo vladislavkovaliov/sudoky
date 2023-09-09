@@ -1,29 +1,28 @@
+@font-face {
+  font-family: "Sudoku Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Sudoku Regular"), url("./fonts/Sudoku.woff") format("woff");
+}
 
 @font-face {
-  font-family: 'Sudoku Regular';
+  font-family: "Sudoku Italic";
   font-style: normal;
   font-weight: normal;
-  src: local('Sudoku Regular'), url('./fonts/Sudoku.woff') format('woff');
-  }
-  
-
-  @font-face {
-  font-family: 'Sudoku Italic';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Sudoku Italic'), url('./fonts/Sudoku-Italic.woff') format('woff');
+  src: local("Sudoku Italic"), url("./fonts/Sudoku-Italic.woff") format("woff");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Sudoku Regular';
+  font-family: "Sudoku Regular";
   font-size: calc(var(--cell-height) / 2);
 }
 
 :root {
-  --bg: #7c7c7c7;
+  --bg: #7c7c7c;
+  --bg-white: #ffffff;
   --gap: 0.5vmin;
   --cell-height: 8vmin;
   --cell-width: 8vmin;
@@ -177,4 +176,69 @@ body {
 .popup-item {
   padding: 12px;
   cursor: pointer;
+}
+
+/* Drawer class */
+
+.drawer-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.drawer-wrapper.show {
+  display: block;
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  width: 200px;
+  height: 100%;
+
+  background-color: var(--bg-white);
+
+  border-radius: 0px 12px 12px 0px;
+  -webkit-box-shadow: 4px 0px 24px 0px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 4px 0px 24px 0px rgba(66, 68, 90, 1);
+  box-shadow: 4px 0px 24px 0px rgba(66, 68, 90, 1);
+
+  position: relative;
+  left: -250px;
+
+  transition: left 0.25s ease-in;
+}
+
+.drawer-content-show {
+  left: 0;
+}
+
+.drawer-content-header {
+  padding: 12px 0 12px 0;
+  text-align: center;
+}
+
+/* Drawer content styles */
+
+.data {
+  overflow-y: scroll;
+  margin-right: -18px;
+}
+
+.data-record {
+  text-align: center;
+
+  padding: 8px 0 8px 0;
+  border-top: 1px solid grey;
+}
+
+.data-record-score {
+}
+
+.data-record-time {
 }

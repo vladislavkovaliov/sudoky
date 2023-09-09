@@ -11,18 +11,23 @@ import {
   ZOOM_CLASSNAME,
   DEFAULT_DIFFICULTY,
 } from "./constant";
-import { IDuplicateValue, IState } from "./types";
+import { IDuplicateValue, IState, IScore } from "./types";
 
 import "./style.css";
 import { convertIndexToPosition } from "./utils/convertIndexToPosition";
 import { getEmptyArray } from "./utils/getEmptyArray";
 import { getDifficultyFromUrlAndFlush } from "./utils/getDifficultyFromUrlAndFlush";
+import { convertHumanTimeToSeconds } from "./utils/convertHumanTimeToSeconds";
 
 import { EventEmitter } from "./core/EventEmitter";
+
+import { Drawer } from "./Drawer";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import {
+  getDocs,
+  query,
   addDoc,
   collection,
   getFirestore,
@@ -48,6 +53,36 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const firestore = getFirestore();
 
+/**
+ * Request to firebase to get list of scores
+ * for displaying in top 10 player drawer.
+ * */
+export async function getScores() {
+  try {
+    const queryScores = query(collection(firestore, "end"));
+
+    const snapshot = await getDocs(queryScores);
+    const scores: IScore[] = [];
+
+    snapshot.forEach((snap) => {
+      scores.push(snap.data() as IScore);
+    });
+
+    return scores
+      .sort(({ totalSeconds: x }, { totalSeconds: y }) => Math.sign(x - y))
+      .slice(0, 10);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+getScores();
+
+/**
+ * The function to send into firebase storage data
+ * regarding passed collection name
+ * and event name and custom payload.
+ * */
 export async function sendEvent(
   firestore: Firestore,
   collectionName: string,
@@ -108,14 +143,33 @@ export function main(difficult: number = DEFAULT_DIFFICULTY) {
   initCellsEvents(state.cells);
   initNumbersEvents();
 
+  const drawer = new Drawer();
+
+  drawer.init();
+
+  window.eventEmitter.on("score-click", async () => {
+    try {
+      const scores = (await getScores()) ?? [];
+
+      drawer.onDrawerShow({ scores });
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
   const header = document.querySelector(".header")!;
   const content = document.querySelector(".content")!;
   const footer = document.querySelector(".footer")!;
 
-  [header, content, footer].forEach((x) => x.classList.remove("hide"));
+  [header, content, footer].forEach((x: Element) =>
+    x.classList?.remove("hide")
+  );
 
-  const popup = document.querySelector(".popup")!;
-  popup.classList.add("hide");
+  const popup = document.querySelector(".popup");
+
+  if (popup) {
+    popup.classList.add("hide");
+  }
 
   sendEvent(firestore, "start", "start_game", { difficult: state.difficult });
 }
@@ -136,13 +190,13 @@ export function handleCellClick(cell: Element, idx: number) {
 
     cell.classList.add(SELECTED_CLASSNAME);
 
-    const column: number[] = getColumnByIndex(idx);
+    getColumnByIndex(idx).forEach((x) =>
+      state.cells[x].classList.add(HIGHLIGHT_CLASSNAME)
+    );
 
-    column.forEach((x) => state.cells[x].classList.add(HIGHLIGHT_CLASSNAME));
-
-    const row: number[] = getRowByIndex(idx);
-
-    row.forEach((x) => state.cells[x].classList.add(HIGHLIGHT_CLASSNAME));
+    getRowByIndex(idx).forEach((x) =>
+      state.cells[x].classList.add(HIGHLIGHT_CLASSNAME)
+    );
   }
 
   if (cell.textContent === EMPTY_STRING) {
@@ -276,7 +330,13 @@ export function handleNumberClick(value: number) {
     setTimeout(() => {
       logEvent(analytics, "event_win", {});
 
-      sendEvent(firestore, "end", "end_game", { score: state.score });
+      const timer = document.querySelector("#timer-value");
+
+      sendEvent(firestore, "end", "end_game", {
+        score: state.score,
+        time: timer?.textContent ?? null,
+        totalSeconds: convertHumanTimeToSeconds(timer?.textContent ?? "00:00"),
+      });
 
       handleWinnerAnimation();
     }, 500);

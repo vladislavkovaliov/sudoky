@@ -9,14 +9,13 @@ export function Difficult() {
   });
 
   const handleDifficultCallback = useCallback((difficult: number) => {
-    console.log("update diff", difficult);
     setDiff(difficult);
   }, []);
 
   useEffect(() => {
     window.eventEmitter.on("difficult", handleDifficultCallback);
-  }, []);
-  console.log(diff);
+  }, [handleDifficultCallback]);
+
   return (
     <div className={styles.container}>
       <p className={styles.title}>Difficult</p>

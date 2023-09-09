@@ -7,5 +7,3 @@ export function App() {
 }
 
 render(<App />, document.querySelector("#preact-header")!);
-
-console.log("preact-header");

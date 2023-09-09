@@ -9,12 +9,16 @@ export function Score() {
     setScore((x) => x + value);
   }, []);
 
+  const handleClickCallback = useCallback(() => {
+    window.eventEmitter.emit("score-click", {});
+  }, []);
+
   useEffect(() => {
     window.eventEmitter.on("score", handleScoreUpdateCallback);
   }, [handleScoreUpdateCallback]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={handleClickCallback}>
       <p className={styles.title}>Score</p>
       <span className={styles.separator}>:</span>
       <p className={styles.value}>{score}</p>

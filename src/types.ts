@@ -13,3 +13,10 @@ export interface IState {
   score: number;
   difficult: number;
 }
+
+export interface IScore {
+  totalSeconds: number;
+  time: string;
+  score: number;
+  eventName: string;
+}
