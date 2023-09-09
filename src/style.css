@@ -24,6 +24,10 @@
   position: absolute;
   right: 0;
   bottom: 0;
+
+  & > img {
+    width: 60px;
+  }
 }
 
 :root {
@@ -34,10 +38,10 @@
   --cell-width: 8vmin;
   --border-radius: 0.5vmin;
   --cell-bg: #f2f2f2;
-  --filled-bg: #d9d9d9;
-  --selected-bg: #ffdbb3;
-  --highlight-bg: #fff3e5;
-  --error-bg: #ff8c8c;
+  --filled-bg: #f4a698;
+  --selected-bg: #73a580;
+  --highlight-bg: #c5c92;
+  --error-bg: #dd614a;
 }
 
 @media (max-width: 600px) {
