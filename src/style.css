@@ -92,7 +92,6 @@ body {
 
 .numbers {
   display: flex;
-  grid-template-columns: repeat(auto, auto);
   gap: var(--gap);
 }
 
@@ -251,4 +250,8 @@ body {
 }
 
 .data-record-time {
+}
+
+.disable-events {
+  pointer-events: none;
 }

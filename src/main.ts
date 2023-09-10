@@ -338,6 +338,10 @@ export function handleNumberClick(value: number) {
         totalSeconds: convertHumanTimeToSeconds(timer?.textContent ?? "00:00"),
       });
 
+      window.alert("Your won");
+
+      freezeNumbers();
+
       handleWinnerAnimation();
     }, 500);
   }
@@ -355,7 +359,6 @@ export function setValueInSelectedCell(value: number, selectedIndex: number) {
 
   if (state.sudoku) {
     state.sudoku._grid[row][column] = value;
-    // Need to update local storage
     const VALUE_WEIGHT = 45;
 
     window.eventEmitter.emit("score", value * VALUE_WEIGHT);
@@ -413,6 +416,12 @@ export function initNumbersEvents() {
   );
 }
 
+export function freezeNumbers() {
+  const numbersElement = document.querySelector(".numbers")!;
+
+  numbersElement.classList.add("disable-events");
+}
+
 export function getCellsFromDOM(): NodeListOf<Element> {
   const cells = document.querySelectorAll(".cell")!;
 
@@ -426,6 +435,10 @@ export function register() {
 
   window.eventEmitter.on("score", (score: number) => {
     state.score = score;
+  });
+
+  window.eventEmitter.on("win", () => {
+    console.log("win");
   });
 }
 
