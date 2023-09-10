@@ -172,6 +172,8 @@ export function main(difficult: number = DEFAULT_DIFFICULTY) {
   }
 
   sendEvent(firestore, "start", "start_game", { difficult: state.difficult });
+
+  window.eventEmitter.emit("start_timer", {});
 }
 
 export function removeClassname(cells: NodeListOf<Element> | never[]) {
@@ -339,6 +341,8 @@ export function handleNumberClick(value: number) {
       });
 
       window.alert("Your won");
+
+      window.eventEmitter.emit("win");
 
       freezeNumbers();
 

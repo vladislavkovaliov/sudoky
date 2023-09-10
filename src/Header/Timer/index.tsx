@@ -10,16 +10,34 @@ export const DELAY = 1000; // one second
 
 export function Timer() {
   const [seconds, setSeconds] = useState(INIT_SECONDS_STATE);
+  /**
+   *  Please be award that using ReturnType you are depending on platform.
+   * */
+  const [intervalId, setIntervalId] = useState<ReturnType<typeof setInterval>>(
+    () => setInterval(() => {}, 0)
+  );
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setSeconds((second) => second + 1);
-    }, DELAY);
+    let _intervalId: ReturnType<typeof setInterval>;
+
+    window.eventEmitter.on("start_timer", () => {
+      const _intervalId = setInterval(() => {
+        setSeconds((second) => second + 1);
+      }, DELAY);
+
+      setIntervalId(_intervalId);
+    });
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(_intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    window.eventEmitter.on("win", () => {
+      clearInterval(intervalId);
+    });
+  }, [intervalId]);
 
   return (
     <div className={styles.container}>
