@@ -123,7 +123,10 @@ export function preMain() {
 
   const reffer = document.referrer;
 
-  logEvent(analytics, "reffer", { reffer: reffer });
+  logEvent(analytics, "reffer", {
+    reffer: reffer,
+    date: new Date().toString(),
+  });
   sendEvent(firestore, "events", "reffer", { reffer: reffer });
 }
 
@@ -439,10 +442,6 @@ export function register() {
 
   window.eventEmitter.on("score", (score: number) => {
     state.score = score;
-  });
-
-  window.eventEmitter.on("win", () => {
-    console.log("win");
   });
 }
 
